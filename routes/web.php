@@ -1,9 +1,22 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::redirect('/', 'dashboard');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', fn () => Inertia::render(('/dashboard')))->name('dashboard');
+
+    Route::resource('user', UserController::class);
+    Route::resource('project', ProjectController::class);
+    Route::resource('task', TaskController::class);
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
