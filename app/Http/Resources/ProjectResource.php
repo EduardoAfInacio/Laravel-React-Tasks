@@ -26,10 +26,6 @@ class ProjectResource extends JsonResource
             "image_path"=> $this->image_path,
             "created_by"=> new UserResource($this->createdBy),
             "updated_by"=> new UserResource($this->updatedBy),
-            //Ao passar dados para o front utilizando uma intancia dessa resource, apareceria
-            //todas as informacoes de quem criou e quem atualizou o projeto, logo, eh necessario criar
-            //uma resource para o usuario e instancia-lo aqui nos campos created e updated.
-            //para controlarmos tudo que aparece.
         ];
     }
 }
