@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
@@ -14,7 +15,23 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $query = Task::query();
+        $sortType = request("sort_field", "created_at");
+        $sortDirection = request("sort_direction", "asc");
+
+        if(request()->has("name")){
+            $query = $query->where("name","like","%".request("name")."%");
+        }
+        if(request()->has("status")){
+            $query = $query->where("status", request("status"));
+        }
+
+        $tasks = $query->orderBy($sortType, $sortDirection)->paginate(5)->onEachSide(1);
+
+        return inertia('Task/Index', [
+            "tasks" => TaskResource::collection($tasks),
+            "queryParams" => request()->query() ?:null,
+        ]);
     }
 
     /**
